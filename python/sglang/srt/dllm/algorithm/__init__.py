@@ -12,13 +12,14 @@ def import_algorithms():
     package_name = "sglang.srt.dllm.algorithm"
     package = importlib.import_module(package_name)
     for _, name, ispkg in pkgutil.iter_modules(package.__path__, package_name + "."):
-        if ispkg:
-            continue
         try:
             module = importlib.import_module(name)
         except Exception as e:
             logger.warning(f"Ignore import error when loading {name}: {e}")
             continue
+
+        # Support both single-file algorithms and package-based algorithms
+        # For packages, check the __init__.py for Algorithm attribute
         if not hasattr(module, "Algorithm"):
             continue
 
