@@ -10,12 +10,14 @@ class DllmConfig:
         algorithm: str,
         algorithm_config: dict[str, Any],
         block_size: int,
+        buffer_size: int,
         mask_id: int,
         max_running_requests: int,
     ):
         self.algorithm = algorithm
         self.algorithm_config = algorithm_config
         self.block_size = block_size
+        self.buffer_size = buffer_size
         self.mask_id = mask_id
         self.max_running_requests = max_running_requests
 
@@ -34,6 +36,7 @@ class DllmConfig:
 
         if model_config.hf_config.architectures[0] == "LLaDA2MoeModelLM":
             block_size = 32
+            buffer_size = 1
             mask_id = 156895
         else:
             raise RuntimeError(
@@ -60,11 +63,13 @@ class DllmConfig:
 
             # Parse common algorithm configurations
             block_size = algorithm_config.get("block_size", block_size)
+            buffer_size = algorithm_config.get("buffer_size", buffer_size)
 
         return DllmConfig(
             algorithm=server_args.dllm_algorithm,
             algorithm_config=algorithm_config,
             block_size=block_size,
+            buffer_size=buffer_size,
             mask_id=mask_id,
             max_running_requests=max_running_requests,
         )

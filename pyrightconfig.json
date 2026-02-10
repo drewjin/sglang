@@ -1,0 +1,15 @@
+{
+  "include": [
+    "python"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules",
+    "**/.git"
+  ],
+  "extraPaths": [
+    "python"
+  ],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic"
+}
