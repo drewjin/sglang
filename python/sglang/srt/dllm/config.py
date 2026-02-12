@@ -9,14 +9,16 @@ class DllmConfig:
         self,
         algorithm: str,
         algorithm_config: dict[str, Any],
+        buffer_size: int,
         block_size: int,
-        mask_id: int,
+        mask_token_id: int,
         max_running_requests: int,
     ):
         self.algorithm = algorithm
         self.algorithm_config = algorithm_config
+        self.buffer_size = buffer_size
         self.block_size = block_size
-        self.mask_id = mask_id
+        self.mask_token_id = mask_token_id
         self.max_running_requests = max_running_requests
 
     @staticmethod
@@ -33,8 +35,9 @@ class DllmConfig:
         )
 
         if model_config.hf_config.architectures[0] == "LLaDA2MoeModelLM":
+            buffer_size = 1
             block_size = 32
-            mask_id = 156895
+            mask_token_id = 156895
         else:
             raise RuntimeError(
                 f"Unknown diffusion LLM: {model_config.hf_config.architectures[0]}"
@@ -60,11 +63,13 @@ class DllmConfig:
 
             # Parse common algorithm configurations
             block_size = algorithm_config.get("block_size", block_size)
+            buffer_size = algorithm_config.get("buffer_size", buffer_size)
 
         return DllmConfig(
             algorithm=server_args.dllm_algorithm,
             algorithm_config=algorithm_config,
+            buffer_size=buffer_size,
             block_size=block_size,
-            mask_id=mask_id,
+            mask_token_id=mask_token_id,
             max_running_requests=max_running_requests,
         )
