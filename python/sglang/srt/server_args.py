@@ -2779,6 +2779,13 @@ class ServerArgs:
             )
             self.enable_mixed_chunk = False
 
+        if not self.max_running_requests:
+            logger.warning(
+                "Max running requests is reset to 48 for diffusion LLM inference. "
+                "You can override this by explicitly setting --max-running-requests."
+            )
+            self.max_running_requests = 48
+
     def _handle_other_validations(self):
         # Handle model inference tensor dump.
         if self.debug_tensor_dump_output_folder is not None:

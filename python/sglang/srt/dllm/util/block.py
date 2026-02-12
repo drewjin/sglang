@@ -16,7 +16,7 @@ class DllmBlockStatus(str, enum.Enum):
 class DllmBlock:
     def __init__(
         self,
-        req: Req,
+        req: "Req",
         mask_token_id: int,
         block_id: int,
         block_size: int,
@@ -76,7 +76,7 @@ class DllmBlock:
 class DllmBlockBuffer:
     def __init__(
         self,
-        req: Req,
+        req: "Req",
         buffer_size: int,
         dllm_blocks: List[DllmBlock],
     ):
