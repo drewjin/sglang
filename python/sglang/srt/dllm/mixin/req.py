@@ -20,6 +20,8 @@ class ReqDllmMixin:
     def init_diffusion_llm(self: Req, dllm_config: DllmConfig):
         self.dllm_phase: Optional[DllmReqPhase] = None
         self.dllm_ids = []
+        self.dllm_blocks = []
+        self.dllm_buffer = None
         self.dllm_block_offset = 0
         self.dllm_config = dllm_config
 
