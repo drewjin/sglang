@@ -2781,10 +2781,10 @@ class ServerArgs:
 
         if not self.max_running_requests:
             logger.warning(
-                "Max running requests is reset to 48 for diffusion LLM inference. "
+                f"Max running requests is reset to cuda_graph_max_bs: {self.cuda_graph_max_bs} for diffusion LLM inference. "
                 "You can override this by explicitly setting --max-running-requests."
             )
-            self.max_running_requests = 48
+            self.max_running_requests = self.cuda_graph_max_bs
 
     def _handle_other_validations(self):
         # Handle model inference tensor dump.
