@@ -1823,13 +1823,13 @@ class Scheduler(
 
     def get_next_batch_to_run(self) -> Optional[ScheduleBatch]:
         self._abort_on_queued_timeout()
-        if self.dllm_config is not None:
+        if self.is_dllm():
             self.dllm_manager.filter_finished_reqs()
 
         # Merge the prefill batch into the running batch
         chunked_req_to_exclude = set()
 
-        if self.dllm_config is not None and self.dllm_manager.any_staging_reqs():
+        if self.is_dllm() and self.dllm_manager.any_staging_reqs():
             chunked_req_to_exclude.update(self.dllm_manager.staging_queue)
             for req in self.dllm_manager.staging_queue:
                 self.stash_chunked_request(req)
@@ -1846,7 +1846,7 @@ class Scheduler(
                 # We need to discard it.
                 chunked_req_to_exclude.add(self.last_batch.chunked_req)
 
-            if self.dllm_config is not None and self.last_batch.reqs:
+            if self.is_dllm() and self.last_batch.reqs:
                 chunked_req_to_exclude.update(self.last_batch.reqs)
 
             # Filter batch
@@ -1866,7 +1866,7 @@ class Scheduler(
                     # Merge running_batch with prefill batch
                     self.running_batch.merge_batch(self.last_batch)
 
-        if self.dllm_config is not None:
+        if self.is_dllm():
             new_batch = self.get_new_batch_dllm()
         else:
             new_batch = self.get_new_batch_prefill()

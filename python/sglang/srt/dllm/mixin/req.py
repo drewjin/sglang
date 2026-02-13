@@ -22,6 +22,12 @@ class ReqMultiBlockDllmMixin:
         self.dllm_blocks: List[DllmBlock] = []
         self.dllm_buffer: DllmBlockBuffer = None
 
+    def _extend_block(self: Req, extend_size: int):
+        self.dllm_ids += [self.dllm_config.mask_token_id] * extend_size
+
+    def _determine_multi_block_dllm_phase(self: Req):
+        pass
+
     def _init_fill_ids_for_multi_block_dllm(self: Req):
         if not self.dllm_ids:
             self.dllm_ids = self.origin_input_ids
@@ -120,6 +126,10 @@ class ReqDllmMixin(ReqMultiBlockDllmMixin):
         ]
 
     def determine_dllm_phase(self: Req):
+        if self.is_multi_block_dllm():
+            self._determine_multi_block_dllm_phase()
+            return
+
         prefix_length = len(self.prefix_indices)
         min_required_length = prefix_length + self.dllm_config.block_size
 
@@ -148,6 +158,3 @@ class ReqDllmMixin(ReqMultiBlockDllmMixin):
             self._extend_block(self.dllm_config.block_size)
 
         self.fill_ids = self.dllm_ids
-
-    def _extend_block(self: Req, extend_size: int):
-        self.dllm_ids += [self.dllm_config.mask_token_id] * extend_size

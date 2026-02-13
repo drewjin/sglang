@@ -17,6 +17,9 @@ if TYPE_CHECKING:
 
 
 class SchedulerDllmMixin:
+    def is_dllm(self):
+        return self.dllm_config is not None
+
     def init_diffusion_llm(self: Scheduler):
         self.dllm_config = (
             DllmConfig.from_server_args(self.server_args)
